@@ -94,6 +94,7 @@ export default function ChatPage({ firstMessage }: ChatPageProps) {
 
   const router = useRouter();
   const searchParams = useSearchParams();
+  const assistantId = searchParams?.get(SEARCH_PARAM_NAMES.PERSONA_ID);
 
   // Use SWR hooks for data fetching
   const {
@@ -618,124 +619,126 @@ export default function ChatPage({ firstMessage }: ChatPageProps) {
       <FederatedOAuthModal />
 
       <AppLayouts.Root>
-        <Dropzone
-          onDrop={(acceptedFiles) =>
-            handleMessageSpecificFileUpload(acceptedFiles)
-          }
-          noClick
-        >
-          {({ getRootProps }) => (
-            <div
-              className="h-full w-full flex flex-col items-center outline-none"
-              {...getRootProps({ tabIndex: -1 })}
-            >
-              {/* ProjectUI */}
-              {!!currentProjectId && projectPanelVisible && (
-                <ProjectContextPanel
-                  projectTokenCount={projectContextTokenCount}
-                  availableContextTokens={availableContextTokens}
-                  setPresentingDocument={setPresentingDocument}
-                />
-              )}
-
-              {/* ChatUI */}
-              {!!currentChatSessionId && (
-                <ChatUI
-                  ref={chatUiRef}
-                  liveAssistant={liveAssistant}
-                  llmManager={llmManager}
-                  currentMessageFiles={currentMessageFiles}
-                  setPresentingDocument={setPresentingDocument}
-                  onSubmit={onSubmit}
-                  onMessageSelection={onMessageSelection}
-                  stopGenerating={stopGenerating}
-                  handleResubmitLastMessage={handleResubmitLastMessage}
-                />
-              )}
-
-              {!currentChatSessionId && !currentProjectId && (
-                <div className="w-full flex-1 flex flex-col items-center justify-end">
-                  <WelcomeMessage
-                    agent={liveAssistant}
-                    isDefaultAgent={isDefaultAgent}
+        <div className="flex h-full w-full flex-row-reverse">
+          {desktopDocumentSidebar}
+          <Dropzone
+            onDrop={(acceptedFiles) => {
+              handleMessageSpecificFileUpload(acceptedFiles);
+            }}
+            noClick
+            noKeyboard
+          >
+            {({ getRootProps }) => (
+              <div
+                className="h-full w-full flex flex-col items-center outline-none"
+                {...getRootProps({ tabIndex: -1 })}
+              >
+                {/* ProjectUI */}
+                {!!currentProjectId && projectPanelVisible && (
+                  <ProjectContextPanel
+                    projectTokenCount={projectContextTokenCount}
+                    availableContextTokens={availableContextTokens}
+                    setPresentingDocument={setPresentingDocument}
                   />
-                  <Spacer rem={1.5} />
-                </div>
-              )}
+                )}
 
-              {/* ChatInputBar container */}
-              <div className="w-[min(50rem,100%)] pointer-events-auto z-sticky flex flex-col px-4 justify-center items-center">
-                {(showOnboarding ||
-                  (user?.role !== UserRole.ADMIN &&
-                    !user?.personalization?.name)) &&
-                  currentProjectId === null && (
-                    <OnboardingFlow
-                      handleHideOnboarding={hideOnboarding}
-                      state={onboardingState}
-                      actions={onboardingActions}
-                      llmDescriptors={llmDescriptors}
+                {/* ChatUI */}
+                {!!currentChatSessionId && (
+                  <ChatUI
+                    ref={chatUiRef}
+                    liveAssistant={liveAssistant}
+                    llmManager={llmManager}
+                    currentMessageFiles={currentMessageFiles}
+                    setPresentingDocument={setPresentingDocument}
+                    onSubmit={onSubmit}
+                    onMessageSelection={onMessageSelection}
+                    stopGenerating={stopGenerating}
+                    handleResubmitLastMessage={handleResubmitLastMessage}
+                  />
+                )}
+
+                {!currentChatSessionId && !currentProjectId && (
+                  <div className="w-full flex-1 flex flex-col items-center justify-end">
+                    <WelcomeMessage
+                      agent={liveAssistant}
+                      isDefaultAgent={isDefaultAgent}
                     />
-                  )}
+                    <Spacer rem={1.5} />
+                  </div>
+                )}
 
-                <ChatInputBar
-                  ref={chatInputBarRef}
-                  deepResearchEnabled={deepResearchEnabled}
-                  toggleDeepResearch={toggleDeepResearch}
-                  toggleDocumentSidebar={toggleDocumentSidebar}
-                  filterManager={filterManager}
-                  llmManager={llmManager}
-                  removeDocs={() => setSelectedDocuments([])}
-                  retrievalEnabled={retrievalEnabled}
-                  selectedDocuments={selectedDocuments}
-                  initialMessage={
-                    searchParams?.get(SEARCH_PARAM_NAMES.USER_PROMPT) || ""
-                  }
-                  stopGenerating={stopGenerating}
-                  onSubmit={handleChatInputSubmit}
-                  onHeightChange={handleInputHeightChange}
-                  chatState={currentChatState}
-                  currentSessionFileTokenCount={
-                    currentChatSessionId
-                      ? currentSessionFileTokenCount
-                      : projectContextTokenCount
-                  }
-                  availableContextTokens={availableContextTokens}
-                  selectedAssistant={selectedAssistant || liveAssistant}
-                  handleFileUpload={handleMessageSpecificFileUpload}
-                  setPresentingDocument={setPresentingDocument}
-                  disabled={
-                    (!llmManager.isLoadingProviders &&
-                      llmManager.hasAnyProvider === false) ||
-                    (!isLoadingOnboarding &&
-                      onboardingState.currentStep !== OnboardingStep.Complete)
-                  }
-                />
-
-                <Spacer rem={0.5} />
-
-                {!!currentProjectId && <ProjectChatSessionList />}
-              </div>
-
-              {/* SearchUI */}
-              {!currentChatSessionId && !currentProjectId && (
-                <div className="flex flex-1 flex-col items-center w-full">
-                  {liveAssistant?.starter_messages &&
-                    liveAssistant.starter_messages.length > 0 &&
-                    messageHistory.length === 0 &&
-                    !currentProjectId &&
-                    !currentChatSessionId && (
-                      <div className="max-w-[50rem] w-full">
-                        <Suggestions onSubmit={onSubmit} />
-                      </div>
+                {/* ChatInputBar container */}
+                <div className="w-[min(50rem,100%)] pointer-events-auto z-sticky flex flex-col px-4 justify-center items-center">
+                  {(showOnboarding ||
+                    (user?.role !== UserRole.ADMIN &&
+                      !user?.personalization?.name)) &&
+                    currentProjectId === null && (
+                      <OnboardingFlow
+                        handleHideOnboarding={hideOnboarding}
+                        state={onboardingState}
+                        actions={onboardingActions}
+                        llmDescriptors={llmDescriptors}
+                      />
                     )}
-                </div>
-              )}
-            </div>
-          )}
-        </Dropzone>
-      </AppLayouts.Root>
 
-      {desktopDocumentSidebar}
+                  <ChatInputBar
+                    ref={chatInputBarRef}
+                    deepResearchEnabled={deepResearchEnabled}
+                    toggleDeepResearch={toggleDeepResearch}
+                    toggleDocumentSidebar={toggleDocumentSidebar}
+                    filterManager={filterManager}
+                    llmManager={llmManager}
+                    removeDocs={() => setSelectedDocuments([])}
+                    retrievalEnabled={retrievalEnabled}
+                    selectedDocuments={selectedDocuments}
+                    initialMessage={
+                      searchParams?.get(SEARCH_PARAM_NAMES.USER_PROMPT) || ""
+                    }
+                    stopGenerating={stopGenerating}
+                    onSubmit={handleChatInputSubmit}
+                    onHeightChange={handleInputHeightChange}
+                    chatState={currentChatState}
+                    currentSessionFileTokenCount={
+                      currentChatSessionId
+                        ? currentSessionFileTokenCount
+                        : projectContextTokenCount
+                    }
+                    availableContextTokens={availableContextTokens}
+                    selectedAssistant={selectedAssistant || liveAssistant}
+                    handleFileUpload={handleMessageSpecificFileUpload}
+                    setPresentingDocument={setPresentingDocument}
+                    disabled={
+                      (!llmManager.isLoadingProviders &&
+                        llmManager.hasAnyProvider === false) ||
+                      (!isLoadingOnboarding &&
+                        onboardingState.currentStep !== OnboardingStep.Complete)
+                    }
+                  />
+
+                  <Spacer rem={0.5} />
+
+                  {!!currentProjectId && <ProjectChatSessionList />}
+                </div>
+
+                {/* SearchUI */}
+                {!currentChatSessionId && !currentProjectId && (
+                  <div className="flex flex-1 flex-col items-center w-full">
+                    {liveAssistant?.starter_messages &&
+                      liveAssistant.starter_messages.length > 0 &&
+                      messageHistory.length === 0 &&
+                      !currentProjectId &&
+                      !currentChatSessionId && (
+                        <div className="max-w-[50rem] w-full">
+                          <Suggestions onSubmit={onSubmit} />
+                        </div>
+                      )}
+                  </div>
+                )}
+              </div>
+            )}
+          </Dropzone>
+        </div>
+      </AppLayouts.Root>
     </>
   );
 }

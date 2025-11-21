@@ -1,17 +1,14 @@
 "use client";
 
+import { useMemo } from "react";
+import Image from "next/image";
+import logoImage from "../../public/logo.png";
 import { OnyxIcon, OnyxLogoTypeIcon } from "@/components/icons/icons";
 import { useSettingsContext } from "@/components/settings/SettingsProvider";
-import Image from "next/image";
-import {
-  LOGO_FOLDED_SIZE_PX,
-  LOGO_UNFOLDED_SIZE_PX,
-  NEXT_PUBLIC_DO_NOT_USE_TOGGLE_OFF_DANSWER_POWERED,
-} from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import Text from "@/refresh-components/texts/Text";
 import Truncated from "@/refresh-components/texts/Truncated";
-import { useMemo } from "react";
+import { LOGO_FOLDED_SIZE_PX, LOGO_UNFOLDED_SIZE_PX } from "@/lib/constants";
 
 export interface LogoProps {
   folded?: boolean;
@@ -28,30 +25,27 @@ export default function Logo({ folded, size, className }: LogoProps) {
 
   const logo = useMemo(
     () =>
-      settings.enterpriseSettings?.use_custom_logo ? (
-        <div
-          className={cn(
-            "aspect-square rounded-full overflow-hidden relative flex-shrink-0",
-            className
-          )}
-          style={{ height: foldedSize, width: foldedSize }}
-        >
-          <Image
-            alt="Logo"
-            src="/api/enterprise-settings/logo"
-            fill
-            className="object-cover object-center"
-            sizes={`${foldedSize}px`}
-          />
-        </div>
-      ) : (
+      true ? (
         <Image
+          src={logoImage}
           alt="Logo"
-          src="/logo.png"
           width={foldedSize}
           height={foldedSize}
+          style={{
+            objectFit: "contain",
+          }}
           className={cn("flex-shrink-0", className)}
-          style={{ objectFit: "contain" }}
+        />
+      ) : (
+        <Image
+          src={logoImage}
+          alt="Logo"
+          width={foldedSize}
+          height={foldedSize}
+          style={{
+            objectFit: "contain",
+          }}
+          className={cn("flex-shrink-0", className)}
         />
       ),
     [className, foldedSize, settings.enterpriseSettings?.use_custom_logo]
