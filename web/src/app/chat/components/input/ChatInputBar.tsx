@@ -217,11 +217,12 @@ const ChatInputBar = React.memo(
         const observer = new ResizeObserver((entries) => {
           for (const entry of entries) {
             const newHeight = entry.contentRect.height;
-            if (previousHeightRef.current !== null) {
+            if (
+              previousHeightRef.current !== null &&
+              previousHeightRef.current !== newHeight
+            ) {
               const delta = newHeight - previousHeightRef.current;
-              if (delta !== 0) {
-                onHeightChangeRef.current?.(delta);
-              }
+              onHeightChangeRef.current?.(delta);
             }
             previousHeightRef.current = newHeight;
           }
@@ -504,11 +505,18 @@ const ChatInputBar = React.memo(
                 "pb-2",
                 "pt-3"
               )}
-              autoFocus
+              autoFocus={!disabled}
               style={{ scrollbarWidth: "thin" }}
               role="textarea"
               aria-multiline
-              placeholder="How can I help you today"
+              placeholder={
+                selectedAssistant?.id === 0
+                  ? `Comment puis-je ${
+                      combinedSettings?.enterpriseSettings?.application_name ||
+                      "Dom Engin."
+                    } vous aider aujourd'hui ?`
+                  : `Comment puis-${selectedAssistant?.name} vous aider aujourd'hui ?`
+              }
               value={message}
               onKeyDown={(event) => {
                 if (

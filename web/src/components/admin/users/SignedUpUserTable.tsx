@@ -279,7 +279,7 @@ export default function SignedUpUserTable({
                 className={buttonClassName}
               >
                 <LogOut className="mr-2 h-4 w-4" />
-                <span>Leave Organization</span>
+                <span>Quitter l'organisation</span>
               </LeaveOrganizationButton>
             ) : (
               <>
@@ -291,7 +291,7 @@ export default function SignedUpUserTable({
                     className={buttonClassName}
                   >
                     <UserMinus className="mr-2 h-4 w-4" />
-                    <span>Delete User</span>
+                    <span>Supprimer l'utilisateur</span>
                   </DeleteUserButton>
                 )}
                 <DeactivateUserButton
@@ -312,7 +312,7 @@ export default function SignedUpUserTable({
                 onClick={() => handleResetPassword(user)}
                 leftIcon={SvgKey}
               >
-                Reset Password
+                Réinitialiser le mot de passe
               </Button>
             )}
           </div>

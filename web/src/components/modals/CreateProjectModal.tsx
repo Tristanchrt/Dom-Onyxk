@@ -38,22 +38,22 @@ export default function CreateProjectModal() {
       <Modal.Content mini>
         <Modal.Header
           icon={SvgFolderPlus}
-          title="Create New Project"
-          description="Use projects to organize your files and chats in one place, and add custom instructions for ongoing work."
+          title="Créer un nouveau projet"
+          description="Utilisez les projets pour organiser vos fichiers et chats en un seul endroit, et ajoutez des instructions personnalisées pour votre travail en cours."
           onClose={() => modal.toggle(false)}
         />
         <Modal.Body className="flex flex-col p-4 bg-background-tint-01">
           <FieldInput
-            label="Project Name"
-            placeholder="What are you working on?"
+            label="Nom du projet"
+            placeholder="Qu'êtes-vous en train de faire?"
             ref={fieldInputRef}
           />
         </Modal.Body>
         <Modal.Footer className="flex flex-row justify-end gap-2 p-4 w-full">
           <Button secondary onClick={() => modal.toggle(false)}>
-            Cancel
+            Annuler
           </Button>
-          <Button onClick={handleSubmit}>Create Project</Button>
+          <Button onClick={handleSubmit}>Créer un projet</Button>
         </Modal.Footer>
       </Modal.Content>
     </Modal>

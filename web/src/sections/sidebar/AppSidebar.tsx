@@ -106,10 +106,10 @@ function RecentsSection({ chatSessions }: RecentsSectionProps) {
         isOver && "bg-background-tint-03"
       )}
     >
-      <SidebarSection title="Recents">
+      <SidebarSection title="Conversations récentes">
         {chatSessions.length === 0 ? (
           <Text as="p" text01 className="px-3">
-            Try sending a message! Your chat history will appear here.
+            Essayez d'envoyer un message ! Votre historique de conversation apparaîtra ici.
           </Text>
         ) : (
           chatSessions.map((chatSession) => (
@@ -369,7 +369,7 @@ const MemoizedAppSidebarInner = memo(
             href={href}
             transient={activeSidebarTab.isNewSession()}
           >
-            New Session
+            Nouvelle conversation
           </SidebarTab>
         </div>
       );
@@ -388,7 +388,7 @@ const MemoizedAppSidebarInner = memo(
             transient={activeSidebarTab.isMoreAgents()}
             lowlight={!folded}
           >
-            {visibleAgents.length === 0 ? "Explore Agents" : "More Agents"}
+            {visibleAgents.length === 0 ? "Explorer les agents" : "Plus d'agents"}
           </SidebarTab>
         </div>
       ),
@@ -403,7 +403,7 @@ const MemoizedAppSidebarInner = memo(
           folded={folded}
           lowlight={!folded}
         >
-          New Project
+          Nouveau projet
         </SidebarTab>
       ),
       [folded, createProjectModal.toggle, createProjectModal.isOpen]
@@ -417,7 +417,7 @@ const MemoizedAppSidebarInner = memo(
               leftIcon={SvgSettings}
               folded={folded}
             >
-              {isAdmin ? "Admin Panel" : "Curator Panel"}
+              {isAdmin ? "Panneau d'administration" : "Panneau de curateur"}
             </SidebarTab>
           )}
           <Settings folded={folded} />
@@ -514,12 +514,12 @@ const MemoizedAppSidebarInner = memo(
                 >
                   {/* Projects */}
                   <SidebarSection
-                    title="Projects"
+                    title="Projets"
                     action={
                       <IconButton
                         icon={SvgFolderPlus}
                         internal
-                        tooltip="New Project"
+                        tooltip="Nouveau projet"
                         onClick={() => createProjectModal.toggle(true)}
                       />
                     }

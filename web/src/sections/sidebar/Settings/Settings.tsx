@@ -96,7 +96,7 @@ function SettingsPopover({
           // )),
           <div key="user-settings" data-testid="Settings/user-settings">
             <LineItem icon={SvgUser} onClick={onUserSettingsClick}>
-              User Settings
+              Paramètres utilisateur
             </LineItem>
           </div>,
           <LineItem
@@ -125,7 +125,7 @@ function SettingsPopover({
               danger
               onClick={handleLogout}
             >
-              Log out
+              Se déconnecter
             </LineItem>
           ),
         ]}

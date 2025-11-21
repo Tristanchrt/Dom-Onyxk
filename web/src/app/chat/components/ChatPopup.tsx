@@ -48,9 +48,17 @@ export function ChatPopup() {
     return null;
   }
 
-  const popupTitle = enterpriseSettings?.custom_popup_header;
+  const popupTitle =
+    enterpriseSettings?.custom_popup_header ||
+    (isConsentScreen
+      ? "Conditions d'utilisation"
+      : `Bienvenue sur ${enterpriseSettings?.application_name || "Dom Engin."}!`);
 
-  const popupContent = enterpriseSettings?.custom_popup_content;
+  const popupContent =
+    enterpriseSettings?.custom_popup_content ||
+    (isConsentScreen
+      ? "En cliquant sur 'J'accepte', vous reconnaissez que vous acceptez les conditions d'utilisation de cette application et consentez à procéder."
+      : "");
 
   const hasApplicationName = Boolean(
     enterpriseSettings?.application_name?.trim()
@@ -59,17 +67,17 @@ export function ChatPopup() {
   const logoDisplayStyle = enterpriseSettings?.logo_display_style;
 
   // Header icon rules:
-  // - If neither app name nor custom logo exists -> show Onyx icon
+  // - If neither app name nor custom logo exists -> show alert icon
   // - If logo display is "name_only" -> show alert icon
-  // - Otherwise -> show uploaded custom logo (fallback to Onyx icon)
+  // - Otherwise -> show uploaded custom logo (fallback to alert icon)
   const headerIcon =
     !hasApplicationName && !hasCustomLogo
-      ? (props: IconProps) => <OnyxIcon size={24} {...props} />
+      ? SvgAlertCircle
       : logoDisplayStyle === "name_only"
         ? SvgAlertCircle
         : hasCustomLogo
           ? CustomLogoHeaderIcon
-          : (props: IconProps) => <OnyxIcon size={24} {...props} />;
+          : SvgAlertCircle;
 
   return (
     <Modal open onOpenChange={() => {}}>
@@ -77,7 +85,7 @@ export function ChatPopup() {
         <Modal.Header
           titleClassName="text-text-04"
           icon={headerIcon}
-          title={popupTitle || "Welcome to Onyx!"}
+          title={popupTitle || "Bienvenue sur Dom Engin.!"}
         />
         <Modal.Body className="bg-background-tint-01 py-4">
           <div className="overflow-y-auto text-left">
@@ -172,7 +180,7 @@ export function ChatPopup() {
                 <FormField.Message
                   messages={{
                     error:
-                      "You need to agree to the terms to access the application.",
+                      "Vous devez accepter les conditions d'utilisation pour accéder à l'application.",
                   }}
                 />
               </FormField>
@@ -193,7 +201,7 @@ export function ChatPopup() {
               setCompletedFlow(true);
             }}
           >
-            Start
+            {isConsentScreen ? "J'accepte" : "Commencer!"}
           </Button>
         </Modal.Footer>
       </Modal.Content>

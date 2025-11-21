@@ -49,12 +49,12 @@ export default function EmailPasswordForm({
     () => ({
       loading: isSignup
         ? isJoin
-          ? "Joining..."
-          : "Creating account..."
-        : "Signing in...",
+          ? "Rejoindre..."
+          : "Créer un compte..."
+        : "Se connecter...",
       success: isSignup
-        ? "Account created. Signing in..."
-        : "Signed in successfully.",
+        ? "Compte créé. Se connecter..."
+        : "Se connecté avec succès.",
       error: errorMessage,
     }),
     [isSignup, isJoin, errorMessage]
@@ -185,7 +185,7 @@ export default function EmailPasswordForm({
                 name="email"
                 render={(field, helper, meta, state) => (
                   <FormField name="email" state={state} className="w-full">
-                    <FormField.Label>Email Address</FormField.Label>
+                    <FormField.Label>Adresse email</FormField.Label>
                     <FormField.Control>
                       <InputTypeIn
                         {...field}
@@ -197,7 +197,7 @@ export default function EmailPasswordForm({
                           }
                           field.onChange(e);
                         }}
-                        placeholder="email@yourcompany.com"
+                        placeholder="email@votredomaine.com"
                         onClear={() => helper.setValue("")}
                         data-testid="email"
                         error={apiStatus === "error"}
@@ -212,7 +212,7 @@ export default function EmailPasswordForm({
                 name="password"
                 render={(field, helper, meta, state) => (
                   <FormField name="password" state={state} className="w-full">
-                    <FormField.Label>Password</FormField.Label>
+                    <FormField.Label>Mot de passe</FormField.Label>
                     <FormField.Control>
                       <PasswordInputTypeIn
                         {...field}
@@ -256,7 +256,7 @@ export default function EmailPasswordForm({
                 disabled={isSubmitting || !isValid || !dirty}
                 rightIcon={SvgArrowRightCircle}
               >
-                {isJoin ? "Join" : isSignup ? "Create Account" : "Sign In"}
+                {isJoin ? "Rejoindre" : isSignup ? "Créer un compte" : "Se connecter"}
               </Button>
               {user?.is_anonymous_user && (
                 <Link
@@ -264,7 +264,7 @@ export default function EmailPasswordForm({
                   className="text-xs text-action-link-05 cursor-pointer text-center w-full font-medium mx-auto"
                 >
                   <span className="hover:border-b hover:border-dotted hover:border-action-link-05">
-                    or continue as guest
+                    ou continuer en tant qu'invité
                   </span>
                 </Link>
               )}

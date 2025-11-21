@@ -45,9 +45,13 @@ export default function Logo({ folded, size, className }: LogoProps) {
           />
         </div>
       ) : (
-        <OnyxIcon
-          size={foldedSize}
+        <Image
+          alt="Logo"
+          src="/logo.png"
+          width={foldedSize}
+          height={foldedSize}
           className={cn("flex-shrink-0", className)}
+          style={{ objectFit: "contain" }}
         />
       ),
     [className, foldedSize, settings.enterpriseSettings?.use_custom_logo]
@@ -63,23 +67,10 @@ export default function Logo({ folded, size, className }: LogoProps) {
           {opts.includeLogo && logo}
           {opts.includeName && !folded && (
             <div className="flex-1 min-w-0">
-              <Truncated headingH3>{applicationName}</Truncated>
+              <Truncated headingH3>{applicationName || "Dom Engin."}</Truncated>
             </div>
           )}
         </div>
-        {!NEXT_PUBLIC_DO_NOT_USE_TOGGLE_OFF_DANSWER_POWERED && !folded && (
-          <Text
-            secondaryBody
-            text03
-            className={cn(
-              "line-clamp-1 truncate",
-              opts.includeLogo && opts.includeName && "ml-[33px]"
-            )}
-            nowrap
-          >
-            Powered by Onyx
-          </Text>
-        )}
       </div>
     );
   };
@@ -95,11 +86,25 @@ export default function Logo({ folded, size, className }: LogoProps) {
   }
 
   // Handle "logo_and_name" or default behavior
-  return applicationName ? (
+  return applicationName || true ? (
     renderNameAndPoweredBy({ includeLogo: true, includeName: true })
   ) : folded ? (
-    <OnyxIcon size={foldedSize} className={cn("flex-shrink-0", className)} />
+    <Image
+      alt="Logo"
+      src="/logo.png"
+      width={foldedSize}
+      height={foldedSize}
+      className={cn("flex-shrink-0", className)}
+      style={{ objectFit: "contain" }}
+    />
   ) : (
-    <OnyxLogoTypeIcon size={unfoldedSize} className={className} />
+    <Image
+      alt="Logo"
+      src="/logo.png"
+      width={unfoldedSize}
+      height={unfoldedSize}
+      className={className}
+      style={{ objectFit: "contain" }}
+    />
   );
 }
