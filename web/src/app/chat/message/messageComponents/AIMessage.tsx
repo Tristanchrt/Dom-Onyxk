@@ -51,8 +51,9 @@ import AgentAvatar from "@/refresh-components/avatars/AgentAvatar";
 import IconButton from "@/refresh-components/buttons/IconButton";
 import CopyIconButton from "@/refresh-components/buttons/CopyIconButton";
 import LLMPopover from "@/refresh-components/popovers/LLMPopover";
+import { SvgThumbsUp, SvgThumbsDown } from "@opal/icons";
 import { parseLlmDescriptor } from "@/lib/llm/utils";
-import { LlmDescriptor, LlmManager } from "@/lib/hooks";
+import { LlmManager } from "@/lib/hooks";
 import { Message } from "@/app/chat/interfaces";
 import { useCreateModal } from "@/refresh-components/contexts/ModalContext";
 import FeedbackModal, {
@@ -60,14 +61,6 @@ import FeedbackModal, {
 } from "../../components/modal/FeedbackModal";
 import { usePopup } from "@/components/admin/connectors/Popup";
 import { useFeedbackController } from "../../hooks/useFeedbackController";
-import { SvgThumbsDown, SvgThumbsUp } from "@opal/icons";
-
-// Type for the regeneration factory function passed from ChatUI
-export type RegenerationFactory = (regenerationRequest: {
-  messageId: number;
-  parentMessage: Message;
-  forceSearch?: boolean;
-}) => (modelOverride: LlmDescriptor) => Promise<void>;
 
 export interface AIMessageProps {
   rawPackets: Packet[];
@@ -79,7 +72,10 @@ export interface AIMessageProps {
   otherMessagesCanSwitchTo?: number[];
   onMessageSelection?: (nodeId: number) => void;
   // Stable regeneration callback - takes (parentMessage) and returns a function that takes (modelOverride)
-  onRegenerate?: RegenerationFactory;
+  onRegenerate?: (params: {
+    messageId: number;
+    parentMessage: Message;
+  }) => (llmDescriptor: ReturnType<typeof parseLlmDescriptor>) => Promise<void>;
   // Parent message needed to construct regeneration request
   parentMessage?: Message | null;
 }

@@ -6,7 +6,7 @@ import Text from "@/refresh-components/texts/Text";
 import { MinimalPersonaSnapshot } from "@/app/admin/assistants/interfaces";
 import { useAgentsContext } from "@/refresh-components/contexts/AgentsContext";
 import { RichTextSubtext } from "@/components/RichTextSubtext";
-import { cn } from "@/lib/utils";
+import SvgFileText from "@/icons/file-text";
 
 interface AssistantDocumentationModalProps {
   open: boolean;
@@ -74,10 +74,12 @@ export default function AssistantDocumentationModal({
   return (
     <Modal open={open} onOpenChange={onOpenChange}>
       <Modal.Content medium>
-        <Modal.Header className="p-6" withBottomShadow>
-          <Modal.CloseButton />
-          <Modal.Title>Documentation - {assistant.name}</Modal.Title>
-        </Modal.Header>
+        <Modal.Header 
+          icon={SvgFileText} 
+          title={`Documentation - ${assistant.name}`}
+          className="p-6" 
+          withBottomShadow 
+        />
 
         <Modal.Body className="flex-1 overflow-auto p-6">
           <div className="flex flex-col gap-6">

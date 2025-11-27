@@ -12,7 +12,6 @@ import {
   MODAL_ROOT_ID,
 } from "@/lib/constants";
 import { Metadata } from "next";
-import { buildClientUrl } from "@/lib/utilsSS";
 import { Inter } from "next/font/google";
 import {
   EnterpriseSettings,
@@ -47,13 +46,9 @@ const hankenGrotesk = Hanken_Grotesk({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  let logoLocation = buildClientUrl("/logo.png");
   return {
     title: "Dom Engin.",
     description: "Réponse à vos questions sur vos documents",
-    icons: {
-      icon: logoLocation,
-    },
   };
 }
 
