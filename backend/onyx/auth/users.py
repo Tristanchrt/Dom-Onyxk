@@ -210,6 +210,9 @@ def verify_email_is_invited(email: str) -> None:
         # SSO providers manage membership; allow JIT provisioning regardless of invites
         return
 
+    # DISABLED WHITELIST CHECK
+    return None
+
     whitelist = get_invited_users()
     if not whitelist:
         return
@@ -224,8 +227,6 @@ def verify_email_is_invited(email: str) -> None:
 
     for email_whitelist in whitelist:
         try:
-            # normalized emails are now being inserted into the db
-            # we can remove this normalization on read after some time has passed
             email_info_whitelist = validate_email(email_whitelist)
         except EmailNotValidError:
             continue
