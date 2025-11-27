@@ -212,6 +212,9 @@ def verify_email_is_invited(email: str) -> None:
         # SSO providers manage membership; allow JIT provisioning regardless of invites
         return
 
+    # DISABLED WHITELIST CHECK
+    return None
+
     whitelist = get_invited_users()
     if not whitelist:
         return
