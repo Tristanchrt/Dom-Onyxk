@@ -17,17 +17,6 @@ export default function AuthFlowContainer({
       </div>
       {authState === "login" && (
         <div className="text-sm mt-6 text-center w-full text-text-03 mainUiBody mx-auto">
-          {footerContent ?? (
-            <>
-              Nouveau sur Dom Engin. ?{" "}
-              <Link
-                href="/auth/signup"
-                className="text-text-05 mainUiAction underline transition-colors duration-200"
-              >
-                Créer un compte
-              </Link>
-            </>
-          )}
         </div>
       )}
       {authState === "signup" && (

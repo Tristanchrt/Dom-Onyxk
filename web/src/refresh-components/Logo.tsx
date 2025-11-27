@@ -51,7 +51,6 @@ export default function Logo({ folded, className }: LogoProps) {
   return isCustom ? (
     <div className="flex flex-col">
       <div className="flex flex-row items-center gap-2">
-        {logo}
         <Text
           headingH3
           className={cn("line-clamp-1 truncate", folded && "invisible")}

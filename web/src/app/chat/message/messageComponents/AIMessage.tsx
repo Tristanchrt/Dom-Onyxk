@@ -43,6 +43,7 @@ import FeedbackModal, {
 } from "../../components/modal/FeedbackModal";
 import { usePopup } from "@/components/admin/connectors/Popup";
 import { useFeedbackController } from "../../hooks/useFeedbackController";
+import { DEFAULT_ASSISTANT_ID } from "@/lib/constants";
 
 export interface AIMessageProps {
   rawPackets: Packet[];
@@ -383,7 +384,9 @@ export default function AIMessage({
         <div className="mx-auto w-[90%] max-w-message-max">
           <div className="lg:mr-12 mobile:ml-0 md:ml-8">
             <div className="flex items-start">
-              <AgentIcon agent={chatState.assistant} />
+              {chatState.assistant.id !== DEFAULT_ASSISTANT_ID && (
+                <AgentIcon agent={chatState.assistant} />
+              )}
               <div className="w-full">
                 <div className="max-w-message-max break-words">
                   <div className="w-full desktop:ml-4">
