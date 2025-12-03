@@ -1,10 +1,11 @@
-export type AuthType =
-  | "disabled"
-  | "basic"
-  | "google_oauth"
-  | "oidc"
-  | "saml"
-  | "cloud";
+export enum AuthType {
+  DISABLED = "disabled",
+  BASIC = "basic",
+  GOOGLE_OAUTH = "google_oauth",
+  OIDC = "oidc",
+  SAML = "saml",
+  CLOUD = "cloud",
+}
 
 export const HOST_URL = process.env.WEB_DOMAIN || "http://127.0.0.1:3000";
 
@@ -15,7 +16,7 @@ export const MCP_INTERNAL_URL =
 // NOTE: this should ONLY be used on the server-side (including middleware).
 // The AUTH_TYPE environment variable is set in the backend and shared with Next.js
 export const SERVER_SIDE_ONLY__AUTH_TYPE = (process.env.AUTH_TYPE ||
-  "disabled") as AuthType;
+  AuthType.DISABLED) as AuthType;
 
 export const NEXT_PUBLIC_DO_NOT_USE_TOGGLE_OFF_DANSWER_POWERED =
   process.env.NEXT_PUBLIC_DO_NOT_USE_TOGGLE_OFF_DANSWER_POWERED?.toLowerCase() ===
@@ -93,19 +94,8 @@ export const NEXT_PUBLIC_INCLUDE_ERROR_POPUP_SUPPORT_LINK =
 export const NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY =
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
 
-// Add support for custom URL protocols in markdown links
-export const ALLOWED_URL_PROTOCOLS = [
-  "http:",
-  "https:",
-  "mailto:",
-  "tel:",
-  "slack:",
-  "vscode:",
-  "file:",
-  "sms:",
-  "spotify:",
-  "zoommtg:",
-];
+// Restrict markdown links to safe protocols
+export const ALLOWED_URL_PROTOCOLS = ["http:", "https:", "mailto:"] as const;
 
 export const MAX_CHARACTERS_PERSONA_DESCRIPTION = 5000000;
 export const MAX_STARTER_MESSAGES = 4;

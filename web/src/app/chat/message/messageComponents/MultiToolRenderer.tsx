@@ -25,7 +25,6 @@ function ExpandedToolItem({
   onToggleClick,
   defaultIconColor = "text-text-300",
   expandedText,
-  stepNumber,
 }: {
   icon: ((props: { size: number }) => JSX.Element) | null;
   content: JSX.Element | string;
@@ -35,7 +34,6 @@ function ExpandedToolItem({
   onToggleClick?: () => void;
   defaultIconColor?: string;
   expandedText?: JSX.Element | string;
-  stepNumber: number;
 }) {
   const finalIcon = icon ? (
     icon({ size: 14 })
@@ -84,7 +82,6 @@ function ExpandedToolItem({
               )}
               onClick={showClickableToggle ? onToggleClick : undefined}
             >
-              <Text text02>{stepNumber}.</Text>
               {status}
             </Text>
           </div>
@@ -114,7 +111,7 @@ export default function MultiToolRenderer({
   stopPacketSeen,
   onAllToolsDisplayed,
 }: {
-  packetGroups: { ind: number; packets: Packet[] }[];
+  packetGroups: { turn_index: number; packets: Packet[] }[];
   chatState: FullChatState;
   isComplete: boolean;
   isFinalAnswerComing: boolean;
@@ -152,7 +149,7 @@ export default function MultiToolRenderer({
   if (!isComplete) {
     // Get the tools to display based on visibleTools
     const toolsToDisplay = toolGroups.filter((group) =>
-      visibleTools.has(group.ind)
+      visibleTools.has(group.turn_index)
     );
 
     if (toolsToDisplay.length === 0) {
@@ -178,7 +175,7 @@ export default function MultiToolRenderer({
 
               return (
                 <div
-                  key={toolGroup.ind}
+                  key={toolGroup.turn_index}
                   style={{ display: isVisible ? "block" : "none" }}
                 >
                   <RendererComponent
@@ -186,9 +183,9 @@ export default function MultiToolRenderer({
                     chatState={chatState}
                     onComplete={() => {
                       // When a tool completes rendering, track it in the hook
-                      const toolInd = toolGroup.ind;
-                      if (toolInd !== undefined) {
-                        handleToolComplete(toolInd);
+                      const toolTurnIndex = toolGroup.turn_index;
+                      if (toolTurnIndex !== undefined) {
+                        handleToolComplete(toolTurnIndex);
                       }
                     }}
                     animate
@@ -211,7 +208,6 @@ export default function MultiToolRenderer({
                               setIsStreamingExpanded(!isStreamingExpanded)
                             }
                             expandedText={expandedText}
-                            stepNumber={index + 1}
                           />
                         );
                       }
@@ -233,7 +229,7 @@ export default function MultiToolRenderer({
 
                           <div
                             className={cn(
-                              "text-base flex items-center gap-1 loading-text mb-2",
+                              "text-base flex items-center gap-1 mb-2",
                               toolsToDisplay.length > 1 &&
                                 isLastItem &&
                                 "cursor-pointer hover:text-text-900 transition-colors"
@@ -245,16 +241,20 @@ export default function MultiToolRenderer({
                                 : undefined
                             }
                           >
-                            {icon ? icon({ size: 14 }) : null}
-                            {status}
+                            {icon ? (
+                              <span className="text-shimmer-base">
+                                {icon({ size: 14 })}
+                              </span>
+                            ) : null}
+                            <span className="loading-text">{status}</span>
                             {toolsToDisplay.length > 1 && isLastItem && (
-                              <div className="ml-1">
+                              <span className="ml-1 text-shimmer-base">
                                 {isStreamingExpanded ? (
                                   <FiChevronDown size={14} />
                                 ) : (
                                   <FiChevronRight size={14} />
                                 )}
-                              </div>
+                              </span>
                             )}
                           </div>
 
@@ -302,7 +302,9 @@ export default function MultiToolRenderer({
       <div
         className={cn(
           "transition-all duration-300 ease-in-out overflow-hidden",
-          isExpanded ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
+          isExpanded
+            ? "max-h-[1000px] overflow-y-auto opacity-100"
+            : "max-h-0 opacity-0"
         )}
       >
         <div
@@ -318,14 +320,14 @@ export default function MultiToolRenderer({
 
               return (
                 <RendererComponent
-                  key={toolGroup.ind}
+                  key={toolGroup.turn_index}
                   packets={toolGroup.packets}
                   chatState={chatState}
                   onComplete={() => {
                     // When a tool completes rendering, track it in the hook
-                    const toolInd = toolGroup.ind;
-                    if (toolInd !== undefined) {
-                      handleToolComplete(toolInd);
+                    const toolTurnIndex = toolGroup.turn_index;
+                    if (toolTurnIndex !== undefined) {
+                      handleToolComplete(toolTurnIndex);
                     }
                   }}
                   animate
@@ -340,7 +342,6 @@ export default function MultiToolRenderer({
                       isLastItem={isLastItem}
                       defaultIconColor="text-text-03"
                       expandedText={expandedText}
-                      stepNumber={index + 1}
                     />
                   )}
                 </RendererComponent>

@@ -40,7 +40,6 @@ import { useUser } from "@/components/user/UserProvider";
 import { SEARCH_TOOL_ID } from "@/app/chat/components/tools/constants";
 import { updateTemperatureOverrideForChatSession } from "@/app/chat/services/lib";
 import { useLLMProviders } from "./hooks/useLLMProviders";
-import { useChatContext } from "@/refresh-components/contexts/ChatContext";
 
 const CREDENTIAL_URL = "/api/manage/admin/credential";
 
@@ -546,9 +545,10 @@ export function useLlmManager(
 ): LlmManager {
   const { user } = useUser();
 
-  // Get all user-accessible providers from ChatContext (loaded server-side)
+  // Get all user-accessible providers via SWR (general providers - no persona filter)
   // This includes public + all restricted providers user can access via groups
-  const { llmProviders: allUserProviders } = useChatContext();
+  const { llmProviders: allUserProviders, isLoading: isLoadingAllProviders } =
+    useLLMProviders();
   // Fetch persona-specific providers to enforce RBAC restrictions per assistant
   // Only fetch if we have an assistant selected
   const personaId =
@@ -752,7 +752,7 @@ export function useLlmManager(
     }
   };
 
-  // Track if any provider exists from ChatContext (for onboarding checks)
+  // Track if any provider exists (for onboarding checks)
   const hasAnyProvider = (allUserProviders?.length ?? 0) > 0;
 
   return {
@@ -766,7 +766,9 @@ export function useLlmManager(
     liveAssistant: liveAssistant ?? null,
     maxTemperature,
     llmProviders,
-    isLoadingProviders: personaId !== undefined && isLoadingPersonaProviders,
+    isLoadingProviders:
+      isLoadingAllProviders ||
+      (personaId !== undefined && isLoadingPersonaProviders),
     hasAnyProvider,
   };
 }
@@ -778,7 +780,7 @@ export function useAuthType(): AuthType | null {
   );
 
   if (NEXT_PUBLIC_CLOUD_ENABLED) {
-    return "cloud";
+    return AuthType.CLOUD;
   }
 
   if (error || !data) {
@@ -924,6 +926,7 @@ const MODEL_DISPLAY_NAMES: { [key: string]: string } = {
   "claude-opus-4-1": "Claude 4.1 Opus",
   "claude-opus-4-20250514": "Claude 4 Opus",
   "claude-4-opus-20250514": "Claude 4 Opus",
+  "claude-opus-4-5": "Claude 4.5 Opus (Latest)",
   "claude-sonnet-4-5": "Claude 4.5 Sonnet (Latest)",
   "claude-sonnet-4-20250514": "Claude 4 Sonnet",
   "claude-4-sonnet-20250514": "Claude 4 Sonnet",
@@ -931,6 +934,9 @@ const MODEL_DISPLAY_NAMES: { [key: string]: string } = {
   "claude-3-7-sonnet-latest": "Claude 3.7 Sonnet (Latest)",
 
   // Google Models
+
+  // 3.0 pro models
+  "gemini-3-pro-preview": "Gemini 3 Pro (Preview)",
 
   // 2.5 pro models
   "gemini-2.5-pro": "Gemini 2.5 Pro",
