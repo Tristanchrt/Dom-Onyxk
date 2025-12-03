@@ -7,6 +7,13 @@ Ce guide vous explique comment configurer et lancer Dom-Onyxk pour la première 
 - Docker et Docker Compose installés
 - Accès en ligne de commande (Terminal)
 
+
+## Version simple
+
+- Run create_env_files.sh
+- Run docker compose up --build -d
+- Run restore_db.sh
+
 ## Étapes de Setup
 
 ### 1. Réinitialiser l'environnement Docker (optionnel mais recommandé)
