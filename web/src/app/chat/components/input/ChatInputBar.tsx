@@ -459,7 +459,7 @@ function ChatInputBarInner({
           role="textarea"
           aria-multiline
           placeholder={
-            selectedAssistant.id === 0
+            !selectedAssistant || selectedAssistant.id === 0
               ? `Comment peux-je ${
                   combinedSettings?.enterpriseSettings?.application_name ||
                   "Dom Engin."

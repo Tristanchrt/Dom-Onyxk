@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import AgentIcon from "@/refresh-components/AgentIcon";
 import Text from "@/refresh-components/texts/Text";
 import { MinimalPersonaSnapshot } from "@/app/admin/assistants/interfaces";
-import { useMemo } from "react";
+import { useMemo, type ReactNode } from "react";
 
 interface WelcomeMessageProps {
   agent?: MinimalPersonaSnapshot;
@@ -16,7 +16,7 @@ export default function WelcomeMessage({
   agent,
   isDefaultAgent,
 }: WelcomeMessageProps) {
-  let content: React.ReactNode = null;
+  let content: ReactNode | null = null;
   if (isDefaultAgent) {
     const greeting = useMemo(getRandomGreeting, []);
     content = (
@@ -63,24 +63,6 @@ export default function WelcomeMessage({
         "mb-6"
       )}
     >
-      {isDefaultAgent ? (
-        <div
-          data-testid="onyx-logo"
-          className="flex flex-row items-center gap-4"
-        >
-          <Text headingH2>{greeting}</Text>
-        </div>
-      ) : (
-        <div
-          data-testid="assistant-name-display"
-          className="flex flex-col items-center gap-3 w-full max-w-[50rem]"
-        >
-          <div className="flex flex-row items-center gap-3">
-            <AgentIcon agent={liveAssistant} />
-            <Text headingH2>{liveAssistant.name}</Text>
-          </div>
-        </div>
-      )}
       {content}
     </div>
   );
