@@ -379,40 +379,25 @@ const ChatInputBar = React.memo(
         combinedSettings?.settings?.deep_research_enabled,
       ]);
 
-      const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        if (showPrompts && (e.key === "Tab" || e.key == "Enter")) {
-          e.preventDefault();
-
-          if (tabbingIconIndex == filteredPrompts.length && showPrompts) {
-            if (showPrompts) {
-              window.open("/chat/input-prompts", "_self");
-            }
-          } else {
-            if (showPrompts) {
-              const selectedPrompt =
-                filteredPrompts[tabbingIconIndex >= 0 ? tabbingIconIndex : 0];
-              if (selectedPrompt) {
-                updateInputPrompt(selectedPrompt);
-              }
-            }
+      const handleKeyDown = useCallback(
+        (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+          if (!showPrompts) {
+            return;
           }
-        }
-
-        if (!showPrompts) {
-          return;
-        }
-        if (e.key === "ArrowDown") {
-          e.preventDefault();
-          setTabbingIconIndex((tabbingIconIndex) =>
-            Math.min(tabbingIconIndex + 1, filteredPrompts.length)
-          );
-        } else if (e.key === "ArrowUp") {
-          e.preventDefault();
-          setTabbingIconIndex((tabbingIconIndex) =>
-            Math.max(tabbingIconIndex - 1, 0)
-          );
-        }
-      };
+          if (e.key === "ArrowDown") {
+            e.preventDefault();
+            setTabbingIconIndex((tabbingIconIndex) =>
+              Math.min(tabbingIconIndex + 1, filteredPrompts.length)
+            );
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            setTabbingIconIndex((tabbingIconIndex) =>
+              Math.max(tabbingIconIndex - 1, 0)
+            );
+          }
+        },
+        [showPrompts, filteredPrompts.length]
+      );
 
       return (
         <>

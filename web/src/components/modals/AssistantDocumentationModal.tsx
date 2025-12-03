@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import Modal from "@/refresh-components/Modal";
 import Text from "@/refresh-components/texts/Text";
 import { MinimalPersonaSnapshot } from "@/app/admin/assistants/interfaces";
-import { useAgentsContext } from "@/refresh-components/contexts/AgentsContext";
+import { useAgents } from "@/lib/hooks/useAgents";
 import { RichTextSubtext } from "@/components/RichTextSubtext";
 import SvgFileText from "@/icons/file-text";
 
@@ -31,7 +31,7 @@ export default function AssistantDocumentationModal({
   onOpenChange,
   assistantId,
 }: AssistantDocumentationModalProps) {
-  const { agents } = useAgentsContext();
+  const { agents } = useAgents();
   const [assistant, setAssistant] = useState<MinimalPersonaSnapshot | null>(
     null
   );
