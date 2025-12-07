@@ -20,6 +20,7 @@ import { useForcedTools } from "@/lib/hooks/useForcedTools";
 import { CalendarIcon, XIcon } from "lucide-react";
 import { getFormattedDateRangeString } from "@/lib/dateUtils";
 import { truncateString, cn, hasNonImageFiles } from "@/lib/utils";
+import { APPLICATION_TITLE } from "@/lib/constants";
 import { useUser } from "@/components/user/UserProvider";
 import { SettingsContext } from "@/components/settings/SettingsProvider";
 import { useProjectsContext } from "@/app/chat/projects/ProjectsContext";
@@ -500,7 +501,7 @@ const ChatInputBar = React.memo(
                       combinedSettings?.enterpriseSettings?.application_name ||
                       "Dom Engin."
                     } vous aider aujourd'hui ?`
-                  : `Comment puis-${selectedAssistant?.name} vous aider aujourd'hui ?`
+                  : `Comment puis-je ${selectedAssistant?.name} vous aider aujourd'hui ?`
               }
               value={message}
               onKeyDown={(event) => {

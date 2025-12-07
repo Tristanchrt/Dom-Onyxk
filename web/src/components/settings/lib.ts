@@ -23,7 +23,8 @@ export enum SettingsError {
  */
 function getDefaultEnterpriseSettings(): EnterpriseSettings {
   return {
-    application_name: "Dom Engin.",
+    application_name:
+      process.env.NEXT_PUBLIC_APPLICATION_TITLE || "Dom Engin.",
     use_custom_logo: false,
     use_custom_logotype: false,
     custom_nav_items: [],

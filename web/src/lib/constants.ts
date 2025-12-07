@@ -11,6 +11,10 @@ export const HOST_URL = process.env.WEB_DOMAIN || "http://127.0.0.1:3000";
 
 export const INTERNAL_URL = process.env.INTERNAL_URL || "http://127.0.0.1:8080";
 
+// Application title/name - can be customized via environment variable
+export const APPLICATION_TITLE =
+  process.env.NEXT_PUBLIC_APPLICATION_TITLE || "Dom Engin.";
+
 // Documentation URLs
 export const DOCS_BASE_URL = "https://docs.onyx.app";
 export const DOCS_ADMINS_PATH = `${DOCS_BASE_URL}/admins`;
