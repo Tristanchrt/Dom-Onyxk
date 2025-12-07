@@ -18,6 +18,7 @@ import {
   useChatSessionStore,
   useDocumentSidebarVisible,
   useSelectedNodeForDocDisplay,
+  useCurrentChatState,
 } from "@/app/chat/stores/useChatSessionStore";
 import { handleCopy } from "@/app/chat/message/copyingUtils";
 import MessageSwitcher from "@/app/chat/message/MessageSwitcher";
@@ -32,7 +33,7 @@ import {
 import { useMessageSwitching } from "@/app/chat/message/messageComponents/hooks/useMessageSwitching";
 import MultiToolRenderer from "@/app/chat/message/messageComponents/MultiToolRenderer";
 import { RendererComponent } from "@/app/chat/message/messageComponents/renderMessageComponent";
-import AgentIcon from "@/refresh-components/AgentIcon";
+import AgentAvatar from "@/refresh-components/avatars/AgentAvatar";
 import IconButton from "@/refresh-components/buttons/IconButton";
 import CopyIconButton from "@/refresh-components/buttons/CopyIconButton";
 import SvgThumbsUp from "@/icons/thumbs-up";
@@ -72,6 +73,9 @@ export default function AIMessage({
   const markdownRef = useRef<HTMLDivElement>(null);
   const { popup, setPopup } = usePopup();
   const { handleFeedbackChange } = useFeedbackController({ setPopup });
+
+  // Get the global chat state to know if we're currently streaming
+  const globalChatState = useCurrentChatState();
 
   const modal = useCreateModal();
   const [feedbackModalProps, setFeedbackModalProps] =
@@ -429,7 +433,7 @@ export default function AIMessage({
           <div className="lg:mr-12 mobile:ml-0 md:ml-8">
             <div className="flex items-start">
               {chatState.assistant.id !== DEFAULT_ASSISTANT_ID && (
-                <AgentIcon agent={chatState.assistant} />
+                <AgentAvatar agent={chatState.assistant} size={24} />
               )}
               <div className="w-full">
                 <div className="max-w-message-max break-words">
@@ -481,6 +485,9 @@ export default function AIMessage({
                                       finalAnswerComingRef.current
                                     }
                                     stopPacketSeen={stopPacketSeen}
+                                    isStreaming={
+                                      globalChatState === "streaming"
+                                    }
                                     onAllToolsDisplayed={() =>
                                       setFinalAnswerComing(true)
                                     }

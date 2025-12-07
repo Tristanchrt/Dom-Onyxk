@@ -1,6 +1,7 @@
 "use client";
 
-import { Modal } from "@/components/Modal";
+import Modal from "@/refresh-components/Modal";
+import SvgAlertCircle from "@/icons/alert-circle";
 import { SettingsContext } from "@/components/settings/SettingsProvider";
 import Button from "@/refresh-components/buttons/Button";
 import { useContext, useEffect, useState } from "react";
@@ -43,36 +44,38 @@ export function ChatPopup() {
       : "");
 
   return (
-    <Modal width="w-3/6 xl:w-[700px]" title={popupTitle}>
-      <>
-        <div className="overflow-y-auto max-h-[90vh] py-8 px-4 text-left">
-          <ReactMarkdown
-            className="prose text-text-800 dark:text-neutral-100 max-w-full"
-            components={{
-              a: ({ node, ...props }) => (
-                <a
-                  {...props}
-                  className="text-link hover:text-link-hover"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                />
-              ),
-              p: ({ node, ...props }) => <p {...props} className="text-sm" />,
-            }}
-            remarkPlugins={[remarkGfm]}
-            urlTransform={transformLinkUri}
-          >
-            {popupContent}
-          </ReactMarkdown>
-        </div>
+    <Modal open onOpenChange={() => {}}>
+      <Modal.Content medium>
+        <Modal.Header icon={SvgAlertCircle} title={popupTitle} />
+        <Modal.Body>
+          <div className="overflow-y-auto max-h-[60vh] text-left">
+            <ReactMarkdown
+              className="prose text-text-800 dark:text-neutral-100 max-w-full"
+              components={{
+                a: ({ node, ...props }) => (
+                  <a
+                    {...props}
+                    className="text-link hover:text-link-hover"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
+                ),
+                p: ({ node, ...props }) => <p {...props} className="text-sm" />,
+              }}
+              remarkPlugins={[remarkGfm]}
+              urlTransform={transformLinkUri}
+            >
+              {popupContent}
+            </ReactMarkdown>
+          </div>
 
-        {showConsentError && (
-          <p className="text-red-500 text-sm mt-2">
-            Vous devez accepter les conditions d'utilisation pour accéder à l'application.
+          {showConsentError && (
+            <p className="text-red-500 text-sm mt-2">
+              Vous devez accepter les conditions d'utilisation pour accéder à l'application.
           </p>
         )}
-
-        <div className="flex w-full justify-center gap-4 mt-4">
+</Modal.Body>
+        <Modal.Footer className="p-4 flex w-full justify-center gap-4">
           {isConsentScreen && (
             <Button danger onClick={() => setShowConsentError(true)}>
               Annuler
@@ -89,8 +92,8 @@ export function ChatPopup() {
           >
             {isConsentScreen ? "J'accepte" : "Commencer!"}
           </Button>
-        </div>
-      </>
+        </Modal.Footer>
+      </Modal.Content>
     </Modal>
   );
 }

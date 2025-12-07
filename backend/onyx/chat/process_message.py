@@ -1,8 +1,8 @@
+import os
 import re
 import traceback
 from collections.abc import Callable
 from collections.abc import Iterator
-from typing import Protocol
 from uuid import UUID
 
 from sqlalchemy.orm import Session
@@ -16,24 +16,20 @@ from onyx.chat.chat_utils import get_custom_agent_prompt
 from onyx.chat.chat_utils import load_all_chat_files
 from onyx.chat.emitter import get_default_emitter
 from onyx.chat.llm_loop import run_llm_loop
-from onyx.chat.memories import get_memories
 from onyx.chat.models import AnswerStream
 from onyx.chat.models import ChatBasicResponse
 from onyx.chat.models import ChatLoadedFile
 from onyx.chat.models import ExtractedProjectFiles
-from onyx.chat.models import LlmDoc
 from onyx.chat.models import MessageResponseIDInfo
-from onyx.chat.models import MessageSpecificCitations
 from onyx.chat.models import ProjectFileMetadata
 from onyx.chat.models import StreamingError
-from onyx.chat.prompt_builder.answer_prompt_builder import calculate_reserved_tokens
+from onyx.chat.prompt_utils import calculate_reserved_tokens
 from onyx.chat.save_chat import save_chat_turn
 from onyx.chat.stop_signal_checker import is_connected as check_stop_signal
 from onyx.chat.stop_signal_checker import reset_cancel_status
 from onyx.configs.chat_configs import CHAT_TARGET_CHUNK_PERCENTAGE
 from onyx.configs.chat_configs import MAX_CHUNKS_FED_TO_CHAT
 from onyx.configs.constants import DEFAULT_PERSONA_ID
-from onyx.configs.constants import DocumentSource
 from onyx.configs.constants import MessageType
 from onyx.context.search.models import CitationDocInfo
 from onyx.context.search.models import SearchDoc
@@ -43,20 +39,18 @@ from onyx.db.chat import get_chat_session_by_id
 from onyx.db.chat import get_or_create_root_message
 from onyx.db.chat import reserve_message_id
 from onyx.db.engine.sql_engine import get_session_with_current_tenant
+from onyx.db.memory import get_memories
 from onyx.db.models import ChatMessage
-from onyx.db.models import SearchDoc as DbSearchDoc
-from onyx.db.models import ToolCall
 from onyx.db.models import User
 from onyx.db.projects import get_project_token_count
 from onyx.db.projects import get_user_files_from_project
 from onyx.db.tools import get_tools
+from onyx.deep_research.dr_loop import run_deep_research_llm_loop
 from onyx.file_store.models import ChatFileType
 from onyx.file_store.models import FileDescriptor
-from onyx.file_store.models import InMemoryChatFile
-from onyx.file_store.utils import build_frontend_file_url
 from onyx.file_store.utils import load_in_memory_chat_files
 from onyx.file_store.utils import verify_user_files
-from onyx.llm.factory import get_llm_tokenizer_encode_func
+from onyx.llm.factory import get_llm_token_counter
 from onyx.llm.factory import get_llms_for_persona
 from onyx.llm.interfaces import LLM
 from onyx.llm.utils import litellm_exception_to_error_msg
@@ -84,80 +78,6 @@ ERROR_TYPE_CANCELLED = "cancelled"
 
 class ToolCallException(Exception):
     """Exception raised for errors during tool calls."""
-
-
-class PartialResponse(Protocol):
-    def __call__(
-        self,
-        message: str,
-        rephrased_query: str | None,
-        reference_docs: list[DbSearchDoc] | None,
-        files: list[FileDescriptor],
-        token_count: int,
-        citations: dict[int, int] | None,
-        error: str | None,
-        tool_call: ToolCall | None,
-    ) -> ChatMessage: ...
-
-
-def _build_project_llm_docs(
-    project_file_ids: list[str] | None,
-    in_memory_user_files: list[InMemoryChatFile] | None,
-) -> list[LlmDoc]:
-    """Construct `LlmDoc` objects for project-scoped user files for citation flow."""
-    project_llm_docs: list[LlmDoc] = []
-    if not project_file_ids or not in_memory_user_files:
-        return project_llm_docs
-
-    project_file_id_set = set(project_file_ids)
-
-    def _strip_nuls(s: str) -> str:
-        return s.replace("\x00", "") if s else s
-
-    for f in in_memory_user_files:
-        if project_file_id_set and (f.file_id in project_file_id_set):
-            cleaned_filename = _strip_nuls(f.filename or str(f.file_id))
-
-            if f.file_type.is_text_file():
-                try:
-                    text_content = f.content.decode("utf-8", errors="ignore")
-                    text_content = _strip_nuls(text_content)
-                except Exception:
-                    text_content = ""
-
-                # Build a short blurb from the file content for better UI display
-                blurb = (
-                    (text_content[:200] + "...")
-                    if len(text_content) > 200
-                    else text_content
-                )
-            else:
-                # Non-text (e.g., images): do not decode bytes; keep empty content but allow citation
-                text_content = ""
-                blurb = f"[{f.file_type.value}] {cleaned_filename}"
-
-            # Provide basic metadata to improve SavedSearchDoc display
-            file_metadata: dict[str, str | list[str]] = {
-                "filename": cleaned_filename,
-                "file_type": f.file_type.value,
-            }
-
-            project_llm_docs.append(
-                LlmDoc(
-                    document_id=str(f.file_id),
-                    content=text_content,
-                    blurb=blurb,
-                    semantic_identifier=cleaned_filename,
-                    source_type=DocumentSource.USER_FILE,
-                    metadata=file_metadata,
-                    updated_at=None,
-                    link=build_frontend_file_url(str(f.file_id)),
-                    source_links=None,
-                    match_highlights=None,
-                )
-            )
-
-    return project_llm_docs
 
 
 def _extract_project_file_texts_and_images(
@@ -286,30 +206,10 @@ def _extract_project_file_texts_and_images(
     )
 
 
-def _translate_citations(
-    citations_list: list[CitationInfo], db_docs: list[DbSearchDoc]
-) -> MessageSpecificCitations:
-    """Always cites the first instance of the document_id, assumes the db_docs
-    are sorted in the order displayed in the UI"""
-    doc_id_to_saved_doc_id_map: dict[str, int] = {}
-    for db_doc in db_docs:
-        if db_doc.document_id not in doc_id_to_saved_doc_id_map:
-            doc_id_to_saved_doc_id_map[db_doc.document_id] = db_doc.id
-
-    citation_to_saved_doc_id_map: dict[int, int] = {}
-    for citation in citations_list:
-        if citation.citation_number not in citation_to_saved_doc_id_map:
-            citation_to_saved_doc_id_map[citation.citation_number] = (
-                doc_id_to_saved_doc_id_map[citation.document_id]
-            )
-
-    return MessageSpecificCitations(citation_map=citation_to_saved_doc_id_map)
-
-
 def _initialize_chat_session(
     message_text: str,
     files: list[FileDescriptor],
-    llm_tokenizer_encode_func: Callable[[str], list[int]],
+    token_counter: Callable[[str], int],
     parent_id: int | None,
     user_id: UUID | None,
     chat_session_id: UUID,
@@ -342,7 +242,7 @@ def _initialize_chat_session(
         token_count = parent_message.token_count
         parent_message = parent_message.parent_message
     else:
-        token_count = len(llm_tokenizer_encode_func(message_text))
+        token_count = token_counter(message_text)
 
     # Flushed for ID but not committed yet
     user_message = create_new_chat_message(
@@ -430,7 +330,7 @@ def stream_chat_message_objects(
             additional_headers=litellm_additional_headers,
             long_term_logger=long_term_logger,
         )
-        tokenizer_encode_func = get_llm_tokenizer_encode_func(llm)
+        token_counter = get_llm_token_counter(llm)
 
         # Verify that the user specified files actually belong to the user
         verify_user_files(
@@ -445,7 +345,7 @@ def stream_chat_message_objects(
         user_message = _initialize_chat_session(
             message_text=message_text,
             files=new_msg_req.file_descriptors,
-            llm_tokenizer_encode_func=tokenizer_encode_func,
+            token_counter=token_counter,
             parent_id=parent_id,
             user_id=user_id,
             chat_session_id=chat_session_id,
@@ -477,7 +377,7 @@ def stream_chat_message_objects(
         reserved_token_count = calculate_reserved_tokens(
             db_session=db_session,
             persona_system_prompt=custom_agent_prompt or "",
-            tokenizer_encode_func=tokenizer_encode_func,
+            token_counter=token_counter,
             files=last_chat_message.files,
             memories=memories,
         )
@@ -568,7 +468,7 @@ def stream_chat_message_objects(
             files=files,
             project_image_files=extracted_project_files.project_image_files,
             additional_context=additional_context,
-            tokenizer_encode_func=tokenizer_encode_func,
+            token_counter=token_counter,
             tool_id_to_name_map=tool_id_to_name_map,
         )
 
@@ -590,24 +490,40 @@ def stream_chat_message_objects(
         # for stop signals. run_llm_loop itself doesn't know about stopping.
         # Note: DB session is not thread safe but nothing else uses it and the
         # reference is passed directly so it's ok.
-        yield from run_chat_llm_with_state_containers(
-            run_llm_loop,
-            emitter=emitter,
-            state_container=state_container,
-            is_connected=check_is_connected,  # Not passed through to run_llm_loop
-            simple_chat_history=simple_chat_history,
-            tools=tools,
-            custom_agent_prompt=custom_agent_prompt,
-            project_files=extracted_project_files,
-            persona=persona,
-            memories=memories,
-            llm=llm,
-            tokenizer_func=tokenizer_encode_func,
-            db_session=db_session,
-            forced_tool_id=(
-                new_msg_req.forced_tool_ids[0] if new_msg_req.forced_tool_ids else None
-            ),
-        )
+        if os.environ.get("ENABLE_DEEP_RESEARCH_LOOP"):  # Dev only feature flag for now
+            yield from run_chat_llm_with_state_containers(
+                run_deep_research_llm_loop,
+                is_connected=check_is_connected,
+                emitter=emitter,
+                state_container=state_container,
+                simple_chat_history=simple_chat_history,
+                tools=tools,
+                custom_agent_prompt=custom_agent_prompt,
+                llm=llm,
+                token_counter=token_counter,
+                db_session=db_session,
+            )
+        else:
+            yield from run_chat_llm_with_state_containers(
+                run_llm_loop,
+                is_connected=check_is_connected,  # Not passed through to run_llm_loop
+                emitter=emitter,
+                state_container=state_container,
+                simple_chat_history=simple_chat_history,
+                tools=tools,
+                custom_agent_prompt=custom_agent_prompt,
+                project_files=extracted_project_files,
+                persona=persona,
+                memories=memories,
+                llm=llm,
+                token_counter=token_counter,
+                db_session=db_session,
+                forced_tool_id=(
+                    new_msg_req.forced_tool_ids[0]
+                    if new_msg_req.forced_tool_ids
+                    else None
+                ),
+            )
 
         # Determine if stopped by user
         completed_normally = check_is_connected()
