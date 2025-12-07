@@ -173,7 +173,7 @@ services:
     restart: unless-stopped
     environment:
       - INTERNAL_URL=${INTERNAL_URL:-http://api_server:8080}
-      - ENABLE_PAID_ENTERPRISE_EDITION_FEATURES=${ENABLE_PAID_ENTERPRISE_EDITION_FEATURES:-true}
+      - ENABLE_PAID_ENTERPRISE_EDITION_FEATURES=true
 
   # Uncomment the block below to enable the MCP server for Onyx.
   # mcp_server:
