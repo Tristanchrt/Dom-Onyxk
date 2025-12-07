@@ -7,6 +7,7 @@ import { OnyxIcon, OnyxLogoTypeIcon } from "@/components/icons/icons";
 import { useSettingsContext } from "@/components/settings/SettingsProvider";
 import { cn } from "@/lib/utils";
 import Text from "@/refresh-components/texts/Text";
+import { APPLICATION_TITLE } from "@/lib/constants";
 
 export const FOLDED_SIZE = 24;
 const UNFOLDED_SIZE = 88;
@@ -56,7 +57,7 @@ export default function Logo({ folded, className }: LogoProps) {
           className={cn("line-clamp-1 truncate", folded && "invisible")}
           nowrap
         >
-          Dom Engin.
+          {APPLICATION_TITLE}
         </Text>
       </div>
     </div>

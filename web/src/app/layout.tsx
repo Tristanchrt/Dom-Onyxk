@@ -10,6 +10,7 @@ import {
   SERVER_SIDE_ONLY__PAID_ENTERPRISE_FEATURES_ENABLED,
   NEXT_PUBLIC_CLOUD_ENABLED,
   MODAL_ROOT_ID,
+  APPLICATION_TITLE,
 } from "@/lib/constants";
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -46,7 +47,7 @@ const hankenGrotesk = Hanken_Grotesk({
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Dom Engin.",
+    title: APPLICATION_TITLE,
     description: "Réponse à vos questions sur vos documents",
   };
 }

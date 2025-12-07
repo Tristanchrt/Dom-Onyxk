@@ -19,6 +19,7 @@ import { useForcedTools } from "@/lib/hooks/useForcedTools";
 import { CalendarIcon, XIcon } from "lucide-react";
 import { getFormattedDateRangeString } from "@/lib/dateUtils";
 import { truncateString, cn, hasNonImageFiles } from "@/lib/utils";
+import { APPLICATION_TITLE } from "@/lib/constants";
 import { useUser } from "@/components/user/UserProvider";
 import { SettingsContext } from "@/components/settings/SettingsProvider";
 import { useProjectsContext } from "@/app/chat/projects/ProjectsContext";
@@ -462,7 +463,7 @@ function ChatInputBarInner({
             !selectedAssistant || selectedAssistant.id === 0
               ? `Comment peux-je ${
                   combinedSettings?.enterpriseSettings?.application_name ||
-                  "Dom Engin."
+                  APPLICATION_TITLE
                 } vous aider aujourd'hui ?`
               : `Comment peux-${selectedAssistant.name} vous aider aujourd'hui ?`
           }
