@@ -52,6 +52,8 @@ RUN apt-get update && \
 # Remove py which is pulled in by retry, py is not needed and is a CVE
 COPY ./requirements/default.txt /tmp/requirements.txt
 COPY ./requirements/ee.txt /tmp/ee-requirements.txt
+# Increase timeout for large package downloads like playwright
+ENV UV_HTTP_TIMEOUT=300
 RUN uv pip install --system --no-cache-dir --upgrade \
         -r /tmp/requirements.txt \
         -r /tmp/ee-requirements.txt && \
