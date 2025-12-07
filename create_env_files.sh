@@ -83,7 +83,7 @@ AUTH_TYPE=disabled
 
 ## Enterprise Features, requires a paid plan and licenses
 
-ENABLE_PAID_ENTERPRISE_EDITION_FEATURES=false
+ENABLE_PAID_ENTERPRISE_EDITION_FEATURES=true
 
 
 
