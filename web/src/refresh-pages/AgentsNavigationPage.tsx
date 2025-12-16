@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useRef, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import AgentCard from "@/refresh-components/AgentCard";
 import { useUser } from "@/components/user/UserProvider";
 import { checkUserOwnsAssistant as checkUserOwnsAgent } from "@/lib/assistants/checkOwnership";
@@ -35,7 +36,6 @@ import {
   SvgPlus,
   SvgUser,
 } from "@opal/icons";
-import useOnMount from "@/hooks/useOnMount";
 
 interface AgentsSectionProps {
   title: string;
@@ -69,6 +69,7 @@ function AgentsSection({ title, description, agents }: AgentsSectionProps) {
 
 export default function AgentsNavigationPage() {
   const { agents } = useAgents();
+  const pathname = usePathname();
   const [creatorFilterOpen, setCreatorFilterOpen] = useState(false);
   const [actionsFilterOpen, setActionsFilterOpen] = useState(false);
   const { user } = useUser();
@@ -89,8 +90,9 @@ export default function AgentsNavigationPage() {
     Map<number, { id: number; name: string }>
   >(new Map());
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const shouldHideButton = pathname?.includes("chat/agents");
 
-  useOnMount(() => {
+  useEffect(() => {
     // Focus the search input when the page loads
     searchInputRef.current?.focus();
   });
@@ -433,11 +435,13 @@ export default function AgentsNavigationPage() {
         title="Agents et Assistants"
         description="Customize AI behavior and knowledge for you and your team’s use cases."
         rightChildren={
-          <div data-testid="AgentsPage/new-agent-button">
-            <Button href="/chat/agents/create" leftIcon={SvgPlus}>
-              Nouveau agent
-            </Button>
-          </div>
+          !shouldHideButton && (
+            <div data-testid="AgentsPage/new-agent-button">
+              <Button href="/chat/agents/create" leftIcon={SvgPlus}>
+                Nouveau agent
+              </Button>
+            </div>
+          )
         }
       >
         <div className="flex flex-col gap-2">
