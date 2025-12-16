@@ -85,6 +85,10 @@ AUTH_TYPE=disabled
 
 ENABLE_PAID_ENTERPRISE_EDITION_FEATURES=true
 
+## Application Title (Frontend)
+
+NEXT_PUBLIC_APPLICATION_TITLE="Toto"
+
 
 
 ## User File Upload Configuration
