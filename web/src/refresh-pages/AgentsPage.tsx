@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useRef, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import AgentCard from "@/refresh-components/AgentCard";
 import { useUser } from "@/components/user/UserProvider";
 import { checkUserOwnsAssistant as checkUserOwnsAgent } from "@/lib/assistants/checkOwnership";
@@ -63,6 +64,7 @@ function AgentsSection({ title, description, agents }: AgentsSectionProps) {
 
 export default function AgentsPage() {
   const { agents } = useAgents();
+  const pathname = usePathname();
   const [creatorFilterOpen, setCreatorFilterOpen] = useState(false);
   const [actionsFilterOpen, setActionsFilterOpen] = useState(false);
   const { user } = useUser();
@@ -83,6 +85,8 @@ export default function AgentsPage() {
     Map<number, { id: number; name: string }>
   >(new Map());
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const shouldHideButton = pathname?.includes("chat/agents");
 
   useEffect(() => {
     // Focus the search input when the page loads
@@ -418,11 +422,13 @@ export default function AgentsPage() {
         description="Personnalisez le comportement et les connaissances de l'IA pour vous et vos cas d'utilisation."
         className="bg-background-tint-01"
         rightChildren={
-          <div data-testid="AgentsPage/new-agent-button">
-            <Button href="/assistants/new" leftIcon={SvgPlus}>
-              Nouveau agent
-            </Button>
-          </div>
+          !shouldHideButton && (
+            <div data-testid="AgentsPage/new-agent-button">
+              <Button href="/assistants/new" leftIcon={SvgPlus}>
+                Nouveau agent
+              </Button>
+            </div>
+          )
         }
       >
         <div className="flex flex-col gap-2">

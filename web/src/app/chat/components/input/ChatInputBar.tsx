@@ -459,14 +459,7 @@ function ChatInputBarInner({
           style={{ scrollbarWidth: "thin" }}
           role="textarea"
           aria-multiline
-          placeholder={
-            !selectedAssistant || selectedAssistant.id === 0
-              ? `Comment peux-je ${
-                  combinedSettings?.enterpriseSettings?.application_name ||
-                  APPLICATION_TITLE
-                } vous aider aujourd'hui ?`
-              : `Comment peux-${selectedAssistant.name} vous aider aujourd'hui ?`
-          }
+          placeholder="Comment puis-je vous aider ?"
           value={message}
           onKeyDown={(event) => {
             if (
