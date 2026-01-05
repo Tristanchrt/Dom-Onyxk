@@ -10,8 +10,7 @@ import Modal from "@/refresh-components/Modal";
 import Button from "@/refresh-components/buttons/Button";
 import Separator from "@/refresh-components/Separator";
 import Text from "@/refresh-components/texts/Text";
-import SvgUsers from "@/icons/users";
-
+import { SvgUsers } from "@opal/icons";
 export interface UserGroupCreationFormProps {
   onClose: () => void;
   setPopup: (popupSpec: PopupSpec | null) => void;
@@ -93,10 +92,10 @@ export default function UserGroupCreationForm({
 
                 <Separator />
 
-                <Text className="font-medium">
+                <Text as="p" className="font-medium">
                   Select which private connectors this group has access to:
                 </Text>
-                <Text text02>
+                <Text as="p" text02>
                   All documents indexed by the selected connectors will be
                   visible to users in this group.
                 </Text>
@@ -111,10 +110,10 @@ export default function UserGroupCreationForm({
 
                 <Separator />
 
-                <Text className="font-medium">
+                <Text as="p" className="font-medium">
                   Select which Users should be a part of this Group.
                 </Text>
-                <Text text02>
+                <Text as="p" text02>
                   All selected users will be able to search through all
                   documents indexed by the selected connectors.
                 </Text>

@@ -25,11 +25,9 @@ import OnyxApiKeyForm from "@/app/admin/api-key/OnyxApiKeyForm";
 import { APIKey } from "@/app/admin/api-key/types";
 import CreateButton from "@/refresh-components/buttons/CreateButton";
 import Button from "@/refresh-components/buttons/Button";
-import SvgRefreshCw from "@/icons/refresh-cw";
-import SvgEdit from "@/icons/edit";
-import SvgKey from "@/icons/key";
 import CopyIconButton from "@/refresh-components/buttons/CopyIconButton";
 import Text from "@/refresh-components/texts/Text";
+import { SvgEdit, SvgKey, SvgRefreshCw } from "@opal/icons";
 
 function Main() {
   const { popup, setPopup } = usePopup();
@@ -65,7 +63,7 @@ function Main() {
 
   const introSection = (
     <div className="flex flex-col items-start gap-4">
-      <Text>
+      <Text as="p">
         API Keys allow you to access Onyx APIs programmatically. Click the
         button below to generate a new API Key.
       </Text>
@@ -115,7 +113,9 @@ function Main() {
             description="Make sure you copy your new API key. You won’t be able to see this key again."
           />
           <Modal.Body>
-            <Text className="break-all flex-1">{fullApiKey}</Text>
+            <Text as="p" className="break-all flex-1">
+              {fullApiKey}
+            </Text>
             <CopyIconButton getCopyText={() => fullApiKey!} />
           </Modal.Body>
         </Modal.Content>
@@ -221,7 +221,7 @@ function Main() {
 
 export default function Page() {
   return (
-    <div className="mx-auto container">
+    <div className="container">
       <AdminPageTitle title="API Keys" icon={SvgKey} />
 
       <Main />

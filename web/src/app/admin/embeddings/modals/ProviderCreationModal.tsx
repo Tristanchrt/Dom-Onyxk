@@ -13,8 +13,7 @@ import {
 } from "@/components/embedding/interfaces";
 import { EMBEDDING_PROVIDERS_ADMIN_URL } from "@/app/admin/configuration/llm/constants";
 import Modal from "@/refresh-components/Modal";
-import SvgSettings from "@/icons/settings";
-
+import { SvgSettings } from "@opal/icons";
 export interface ProviderCreationModalProps {
   updateCurrentModel: (
     newModel: string,
@@ -203,7 +202,7 @@ export default function ProviderCreationModal({
           >
             {({ isSubmitting, handleSubmit, setFieldValue }) => (
               <Form onSubmit={handleSubmit} className="space-y-4">
-                <Text>
+                <Text as="p">
                   You are setting the credentials for this provider. To access
                   this information, follow the instructions{" "}
                   <a

@@ -7,7 +7,6 @@ import InvitedUserTable from "@/components/admin/users/InvitedUserTable";
 import SignedUpUserTable from "@/components/admin/users/SignedUpUserTable";
 
 import Modal from "@/refresh-components/Modal";
-import SvgUserPlus from "@/icons/user-plus";
 import { ThreeDotsLoader } from "@/components/Loading";
 import { AdminPageTitle } from "@/components/admin/Title";
 import { usePopup, PopupSpec } from "@/components/admin/connectors/Popup";
@@ -24,10 +23,8 @@ import CreateButton from "@/refresh-components/buttons/CreateButton";
 import Button from "@/refresh-components/buttons/Button";
 import InputTypeIn from "@/refresh-components/inputs/InputTypeIn";
 import { Spinner } from "@/components/Spinner";
-import SvgDownloadCloud from "@/icons/download-cloud";
 import { useAuthType } from "@/lib/hooks";
-import SvgUser from "@/icons/user";
-
+import { SvgDownloadCloud, SvgUser, SvgUserPlus } from "@opal/icons";
 interface CountDisplayProps {
   label: string;
   value: number | null;
@@ -43,10 +40,10 @@ function CountDisplay({ label, value, isLoading }: CountDisplayProps) {
 
   return (
     <div className="flex items-center gap-1 px-1 py-0.5 rounded-06">
-      <Text mainUiMuted text03>
+      <Text as="p" mainUiMuted text03>
         {label}
       </Text>
-      <Text headingH3 text05>
+      <Text as="p" headingH3 text05>
         {displayValue}
       </Text>
     </div>
@@ -361,7 +358,7 @@ const AddUserButton = ({
             />
             <Modal.Body>
               <div className="flex flex-col gap-2">
-                <Text>
+                <Text as="p">
                   Add the email addresses to import, separated by whitespaces.
                   Invited users will be able to login to this domain with their
                   email address.
@@ -378,7 +375,7 @@ const AddUserButton = ({
 
 const Page = () => {
   return (
-    <div className="mx-auto container">
+    <div className="container">
       <AdminPageTitle title="Manage Users" icon={SvgUser} />
       <SearchableTables />
     </div>

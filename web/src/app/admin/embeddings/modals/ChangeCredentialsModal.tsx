@@ -7,7 +7,6 @@ import Text from "@/refresh-components/texts/Text";
 import Separator from "@/refresh-components/Separator";
 import Button from "@/refresh-components/buttons/Button";
 import { Label } from "@/components/Field";
-import SvgSettings from "@/icons/settings";
 import {
   CloudEmbeddingProvider,
   getFormattedProviderName,
@@ -18,6 +17,7 @@ import {
 } from "@/app/admin/configuration/llm/constants";
 import { mutate } from "swr";
 import { testEmbedding } from "@/app/admin/embeddings/pages/utils";
+import { SvgSettings } from "@opal/icons";
 
 export interface ChangeCredentialsModalProps {
   provider: CloudEmbeddingProvider;
@@ -159,6 +159,9 @@ export default function ChangeCredentialsModal({
         );
       }
 
+      // Refresh cached provider details so the rest of the form sees the new key without forcing a re-index
+      await mutate(EMBEDDING_PROVIDERS_ADMIN_URL);
+
       onConfirm();
     } catch (error) {
       setTestError(
@@ -179,7 +182,7 @@ export default function ChangeCredentialsModal({
         <Modal.Body>
           {!isAzure && (
             <>
-              <Text>
+              <Text as="p">
                 You can modify your configuration by providing a new API key
                 {isProxy ? " or API URL." : "."}
               </Text>
@@ -236,7 +239,7 @@ export default function ChangeCredentialsModal({
 
                     <div>
                       <Label className="mt-2">Test Model</Label>
-                      <Text>
+                      <Text as="p">
                         Since you are using a liteLLM proxy, we&apos;ll need a
                         model name to test the connection with.
                       </Text>
@@ -277,10 +280,10 @@ export default function ChangeCredentialsModal({
             </>
           )}
 
-          <Text className="mt-4 font-bold">
+          <Text as="p" className="mt-4 font-bold">
             You can delete your configuration.
           </Text>
-          <Text>
+          <Text as="p">
             This is only possible if you have already switched to a different
             embedding type!
           </Text>

@@ -7,8 +7,7 @@ import Button from "@/refresh-components/buttons/Button";
 import Text from "@/refresh-components/texts/Text";
 import { USER_ROLE_LABELS, UserRole } from "@/lib/types";
 import { APIKey } from "./types";
-import SvgKey from "@/icons/key";
-
+import { SvgKey } from "@opal/icons";
 export interface OnyxApiKeyFormProps {
   onClose: () => void;
   setPopup: (popupSpec: PopupSpec | null) => void;
@@ -79,7 +78,7 @@ export default function OnyxApiKeyForm({
           >
             {({ isSubmitting }) => (
               <Form className="w-full overflow-visible">
-                <Text>
+                <Text as="p">
                   Choose a memorable name for your API key. This is optional and
                   can be added or changed later!
                 </Text>

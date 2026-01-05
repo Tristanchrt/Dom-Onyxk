@@ -27,7 +27,6 @@ import {
 import RerankingDetailsForm from "../RerankingFormPage";
 import { useEmbeddingFormContext } from "@/components/context/EmbeddingContext";
 import Modal from "@/refresh-components/Modal";
-import SvgAlertTriangle from "@/icons/alert-triangle";
 import InstantSwitchConfirmModal from "../modals/InstantSwitchConfirmModal";
 import { useRouter } from "next/navigation";
 import CardSection from "@/components/admin/CardSection";
@@ -39,9 +38,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import SimpleTooltip from "@/refresh-components/SimpleTooltip";
-import SvgArrowLeft from "@/icons/arrow-left";
-import SvgArrowRight from "@/icons/arrow-right";
-
+import { SvgAlertTriangle, SvgArrowLeft, SvgArrowRight } from "@opal/icons";
 export default function EmbeddingForm() {
   const { formStep, nextFormStep, prevFormStep } = useEmbeddingFormContext();
   const { popup, setPopup } = usePopup();
@@ -500,7 +497,7 @@ export default function EmbeddingForm() {
             <h2 className="text-2xl font-bold mb-4 text-text-800">
               Select an Embedding Model
             </h2>
-            <Text className="mb-4">
+            <Text as="p" className="mb-4">
               Note that updating the backing model will require a complete
               re-indexing of all documents across every connected source. This
               is taken care of in the background so that the system can continue
@@ -550,15 +547,19 @@ export default function EmbeddingForm() {
               />
               <Modal.Body>
                 <div className="text-lg">
-                  <Text>
+                  <Text as="p">
                     {`${selectedProvider.model_name} is a lower accuracy model. We recommend the following alternatives:`}
                   </Text>
                   <ul className="list-disc list-inside mt-2 ml-4">
                     <li>
-                      <Text>Cohere embed-english-v3.0 for cloud-based</Text>
+                      <Text as="p">
+                        Cohere embed-english-v3.0 for cloud-based
+                      </Text>
                     </li>
                     <li>
-                      <Text>Nomic nomic-embed-text-v1 for self-hosted</Text>
+                      <Text as="p">
+                        Nomic nomic-embed-text-v1 for self-hosted
+                      </Text>
                     </li>
                   </ul>
                 </div>
@@ -596,7 +597,7 @@ export default function EmbeddingForm() {
             <h2 className="text-2xl font-bold mb-4 text-text-800">
               Select a Reranking Model
             </h2>
-            <Text className="mb-4">
+            <Text as="p" className="mb-4">
               Updating the reranking model does not require re-indexing
               documents. The reranker helps improve search quality by reordering
               results after the initial embedding search. Changes will take
@@ -649,7 +650,7 @@ export default function EmbeddingForm() {
             <h2 className="text-2xl font-bold mb-4 text-text-800">
               Advanced Search Configuration
             </h2>
-            <Text className="mb-4">
+            <Text as="p" className="mb-4">
               Configure advanced embedding and search settings. Changes will
               require re-indexing documents.
             </Text>

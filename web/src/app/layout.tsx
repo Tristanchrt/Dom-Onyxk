@@ -32,6 +32,7 @@ import Error from "@/components/errorPages/ErrorPage";
 import AccessRestrictedPage from "@/components/errorPages/AccessRestrictedPage";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { fetchAppSidebarMetadata } from "@/lib/appSidebarSS";
+import StatsOverlayLoader from "@/components/dev/StatsOverlayLoader";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -149,6 +150,9 @@ export default async function RootLayout({
         {children}
       </div>
       {process.env.NEXT_PUBLIC_POSTHOG_KEY && <WebVitals />}
+      {process.env.NEXT_PUBLIC_ENABLE_STATS === "true" && (
+        <StatsOverlayLoader />
+      )}
     </AppProvider>
   );
 }

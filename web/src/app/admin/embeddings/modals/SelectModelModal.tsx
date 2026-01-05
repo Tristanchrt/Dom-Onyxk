@@ -1,8 +1,8 @@
 import Modal from "@/refresh-components/Modal";
 import Button from "@/refresh-components/buttons/Button";
 import Text from "@/refresh-components/texts/Text";
-import SvgServer from "@/icons/server";
 import { CloudEmbeddingModel } from "@/components/embedding/interfaces";
+import { SvgServer } from "@opal/icons";
 
 export interface SelectModelModalProps {
   model: CloudEmbeddingModel;
@@ -24,7 +24,7 @@ export default function SelectModelModal({
           onClose={onCancel}
         />
         <Modal.Body>
-          <Text>
+          <Text as="p">
             You&apos;re selecting a new embedding model,{" "}
             <strong>{model.model_name}</strong>. If you update to this model,
             you will need to undergo a complete re-indexing. Are you sure?

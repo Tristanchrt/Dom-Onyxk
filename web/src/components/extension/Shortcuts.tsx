@@ -15,9 +15,9 @@ import { PencilIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
 import { PopupSpec } from "@/components/admin/connectors/Popup";
 import Modal from "@/refresh-components/Modal";
-import SvgAlertCircle from "@/icons/alert-circle";
 import { QuestionMarkIcon } from "../icons/icons";
 import Text from "@/refresh-components/texts/Text";
+import { SvgAlertCircle } from "@opal/icons";
 
 export const validateUrl = (input: string) => {
   try {
@@ -249,7 +249,7 @@ export const MaxShortcutsReachedModal = ({
           onClose={onClose}
         />
         <Modal.Body>
-          <Text>
+          <Text as="p">
             You&apos;ve reached the maximum limit of 8 shortcuts. To add a new
             shortcut, please remove an existing one.
           </Text>

@@ -13,8 +13,7 @@ import Button from "@/refresh-components/buttons/Button";
 import Text from "@/refresh-components/texts/Text";
 import { PageSelector } from "@/components/PageSelector";
 import { useEffect, useState, useMemo } from "react";
-import SvgAlertTriangle from "@/icons/alert-triangle";
-
+import { SvgAlertTriangle } from "@opal/icons";
 export interface IndexAttemptErrorsModalProps {
   errors: {
     items: IndexAttemptError[];
@@ -140,11 +139,11 @@ export default function IndexAttemptErrorsModal({
         <Modal.Body className="flex flex-col gap-4 min-h-0">
           {!isResolvingErrors && (
             <div className="flex flex-col gap-2 flex-shrink-0">
-              <Text>
+              <Text as="p">
                 Below are the errors encountered during indexing. Each row
                 represents a failed document or entity.
               </Text>
-              <Text>
+              <Text as="p">
                 Click the button below to kick off a full re-index to try and
                 resolve these errors. This full re-index may take much longer
                 than a normal update.

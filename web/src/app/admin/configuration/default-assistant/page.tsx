@@ -9,9 +9,8 @@ import { errorHandlingFetcher } from "@/lib/fetcher";
 import Text from "@/refresh-components/texts/Text";
 import useSWR, { mutate } from "swr";
 import { ErrorCallout } from "@/components/ErrorCallout";
-import OnyxLogo from "@/icons/onyx-logo";
 import { usePopup } from "@/components/admin/connectors/Popup";
-import { useAgents } from "@/lib/hooks/useAgents";
+import { useAgents } from "@/hooks/useAgents";
 import Separator from "@/refresh-components/Separator";
 import { SubLabel } from "@/components/Field";
 import Button from "@/refresh-components/buttons/Button";
@@ -23,6 +22,7 @@ import { ToolSelector } from "@/components/admin/assistants/ToolSelector";
 import InputTextArea from "@/refresh-components/inputs/InputTextArea";
 import { HoverPopup } from "@/components/HoverPopup";
 import { Info } from "lucide-react";
+import { SvgOnyxLogo } from "@opal/icons";
 
 interface DefaultAssistantConfiguration {
   tool_ids: number[];
@@ -164,7 +164,7 @@ function DefaultAssistantConfig() {
           <Form>
             <div className="space-y-6">
               <div className="mt-4">
-                <Text className="text-text-dark">
+                <Text as="p" className="text-text-dark">
                   Configure which capabilities are enabled for the default
                   assistant in chat. These settings apply to all users who
                   haven&apos;t customized their assistant preferences.
@@ -175,7 +175,12 @@ function DefaultAssistantConfig() {
 
               <div className="max-w-4xl">
                 <div className="flex gap-x-2 items-center">
-                  <Text mainUiBody text04 className="font-medium text-sm">
+                  <Text
+                    as="p"
+                    mainUiBody
+                    text04
+                    className="font-medium text-sm"
+                  >
                     Instructions
                   </Text>
                 </div>
@@ -217,7 +222,7 @@ function DefaultAssistantConfig() {
                     placeholder="You are a professional email writing assistant that always uses a polite enthusiastic tone, emphasizes action items, and leaves blanks for the human to fill in when you have unknowns"
                   />
                   <div className="flex justify-end items-center mt-2">
-                    <Text mainUiMuted text03 className="text-sm mr-4">
+                    <Text as="p" mainUiMuted text03 className="text-sm mr-4">
                       {values.system_prompt.length} characters
                     </Text>
                   </div>
@@ -252,7 +257,11 @@ export default function Page() {
       <AdminPageTitle
         title="Default Assistant"
         icon={
-          <OnyxLogo width={32} height={32} className="my-auto stroke-text-04" />
+          <SvgOnyxLogo
+            width={32}
+            height={32}
+            className="my-auto stroke-text-04"
+          />
         }
       />
       <DefaultAssistantConfig />

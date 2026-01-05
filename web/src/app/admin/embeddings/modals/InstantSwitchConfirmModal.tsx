@@ -1,8 +1,7 @@
 import Modal from "@/refresh-components/Modal";
 import Button from "@/refresh-components/buttons/Button";
 import Text from "@/refresh-components/texts/Text";
-import SvgAlertTriangle from "@/icons/alert-triangle";
-
+import { SvgAlertTriangle } from "@opal/icons";
 export interface InstantSwitchConfirmModalProps {
   onClose: () => void;
   onConfirm: () => void;
@@ -21,12 +20,12 @@ export default function InstantSwitchConfirmModal({
           onClose={onClose}
         />
         <Modal.Body>
-          <Text>
+          <Text as="p">
             Instant switching will immediately change the embedding model
             without re-indexing. Searches will be over a partial set of
             documents (starting with 0 documents) until re-indexing is complete.
           </Text>
-          <Text>
+          <Text as="p">
             <strong>This is not reversible.</strong>
           </Text>
         </Modal.Body>

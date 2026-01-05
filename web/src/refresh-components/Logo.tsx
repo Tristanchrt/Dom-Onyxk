@@ -7,17 +7,17 @@ import { OnyxIcon, OnyxLogoTypeIcon } from "@/components/icons/icons";
 import { useSettingsContext } from "@/components/settings/SettingsProvider";
 import { cn } from "@/lib/utils";
 import Text from "@/refresh-components/texts/Text";
-import { APPLICATION_TITLE } from "@/lib/constants";
-
-export const FOLDED_SIZE = 24;
-const UNFOLDED_SIZE = 88;
+import { APPLICATION_TITLE, LOGO_FOLDED_SIZE_PX, LOGO_UNFOLDED_SIZE_PX } from "@/lib/constants";
 
 export interface LogoProps {
   folded?: boolean;
+  size?: number;
   className?: string;
 }
 
-export default function Logo({ folded, className }: LogoProps) {
+export default function Logo({ folded, size, className }: LogoProps) {
+  const foldedSize = size ?? LOGO_FOLDED_SIZE_PX;
+  const unfoldedSize = size ?? LOGO_UNFOLDED_SIZE_PX;
   const settings = useSettingsContext();
 
   const isCustom = true;
@@ -27,8 +27,8 @@ export default function Logo({ folded, className }: LogoProps) {
         <Image
           src={logoImage}
           alt="Logo"
-          width={FOLDED_SIZE}
-          height={FOLDED_SIZE}
+          width={foldedSize}
+          height={foldedSize}
           style={{
             objectFit: "contain",
           }}
@@ -38,8 +38,8 @@ export default function Logo({ folded, className }: LogoProps) {
         <Image
           src={logoImage}
           alt="Logo"
-          width={FOLDED_SIZE}
-          height={FOLDED_SIZE}
+          width={foldedSize}
+          height={foldedSize}
           style={{
             objectFit: "contain",
           }}
@@ -53,8 +53,9 @@ export default function Logo({ folded, className }: LogoProps) {
     <div className="flex flex-col">
       <div className="flex flex-row items-center gap-2">
         <Text
+          as="p"
           headingH3
-          className={cn("line-clamp-1 truncate", folded && "invisible")}
+          className={cn("line-clamp-1 truncate", folded && "hidden")}
           nowrap
         >
           {APPLICATION_TITLE}
@@ -62,8 +63,8 @@ export default function Logo({ folded, className }: LogoProps) {
       </div>
     </div>
   ) : folded ? (
-    <OnyxIcon size={FOLDED_SIZE} className={cn("flex-shrink-0", className)} />
+    <OnyxIcon size={foldedSize} className={cn("flex-shrink-0", className)} />
   ) : (
-    <OnyxLogoTypeIcon size={UNFOLDED_SIZE} className={className} />
+    <OnyxLogoTypeIcon size={unfoldedSize} className={className} />
   );
 }

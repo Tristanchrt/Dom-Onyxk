@@ -2,11 +2,11 @@ import Modal from "@/refresh-components/Modal";
 import Text from "@/refresh-components/texts/Text";
 import Button from "@/refresh-components/buttons/Button";
 import { Callout } from "@/components/ui/callout";
-import SvgTrash from "@/icons/trash";
 import {
   CloudEmbeddingProvider,
   getFormattedProviderName,
 } from "../../../../components/embedding/interfaces";
+import { SvgTrash } from "@opal/icons";
 
 export interface DeleteCredentialsModalProps {
   modelProvider: CloudEmbeddingProvider;
@@ -30,7 +30,7 @@ export default function DeleteCredentialsModal({
           onClose={onCancel}
         />
         <Modal.Body>
-          <Text>
+          <Text as="p">
             You&apos;re about to delete your{" "}
             {getFormattedProviderName(modelProvider.provider_type)} credentials.
             Are you sure?

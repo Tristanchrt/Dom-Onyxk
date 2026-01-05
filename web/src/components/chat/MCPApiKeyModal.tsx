@@ -5,12 +5,8 @@ import Modal from "@/refresh-components/Modal";
 import Button from "@/refresh-components/buttons/Button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import SvgKey from "@/icons/key";
 import Text from "@/refresh-components/texts/Text";
-import SvgEye from "@/icons/eye";
-import SvgEyeClosed from "@/icons/eye-closed";
-import SvgAlertCircle from "@/icons/alert-circle";
-
+import { SvgAlertCircle, SvgEye, SvgEyeClosed, SvgKey } from "@opal/icons";
 interface MCPAuthTemplate {
   headers: Array<{ name: string; value: string }>;
   request_body_params: Array<{ path: string; value: string }>;
@@ -164,12 +160,12 @@ export default function MCPApiKeyModal({
           onClose={handleClose}
         />
         <Modal.Body>
-          <Text>
+          <Text as="p">
             {isAuthenticated
               ? `Update your ${credsType} for ${serverName}.`
               : `Enter your ${credsType} for ${serverName} to enable authentication.`}
           </Text>
-          <Text text02>
+          <Text as="p" text02>
             {isAuthenticated
               ? "Changes will be validated against the server before being saved."
               : `Your ${credsType} will be validated against the server and stored securely.`}
