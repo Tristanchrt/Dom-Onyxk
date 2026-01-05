@@ -30,9 +30,9 @@ import {
 import {
   SvgActions,
   SvgCheck,
-  SvgOnyxOctagon,
   SvgPlus,
   SvgUser,
+  SvgGlobe,
 } from "@opal/icons";
 
 interface AgentsSectionProps {
@@ -423,7 +423,7 @@ export default function AgentsPage() {
       aria-label="Agents Page"
     >
       <SettingsLayouts.Header
-        icon={SvgOnyxOctagon}
+        icon={SvgGlobe}
         title="Agents et Assistants"
         description="Personnalisez le comportement et les connaissances de l'IA pour vous et vos cas d'utilisation."
         rightChildren={
