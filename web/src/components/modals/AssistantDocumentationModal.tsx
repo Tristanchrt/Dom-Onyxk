@@ -4,9 +4,9 @@ import { useState, useEffect, useMemo } from "react";
 import Modal from "@/refresh-components/Modal";
 import Text from "@/refresh-components/texts/Text";
 import { MinimalPersonaSnapshot } from "@/app/admin/assistants/interfaces";
-import { useAgents } from "@/lib/hooks/useAgents";
+import { useAgents } from "@/hooks/useAgents";
 import { RichTextSubtext } from "@/components/RichTextSubtext";
-import SvgFileText from "@/icons/file-text";
+import { SvgFileText } from "@opal/icons";
 
 interface AssistantDocumentationModalProps {
   open: boolean;
