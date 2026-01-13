@@ -2,8 +2,6 @@
 
 import { useMemo } from "react";
 import Image from "next/image";
-import logoImage from "../../public/logo.png";
-import { OnyxIcon, OnyxLogoTypeIcon } from "@/components/icons/icons";
 import { useSettingsContext } from "@/components/settings/SettingsProvider";
 import { cn } from "@/lib/utils";
 import Text from "@/refresh-components/texts/Text";
@@ -27,7 +25,7 @@ export default function Logo({ folded, size, className }: LogoProps) {
     () =>
       true ? (
         <Image
-          src={logoImage}
+          src="/logo.png"
           alt="Logo"
           width={foldedSize}
           height={foldedSize}
@@ -38,7 +36,7 @@ export default function Logo({ folded, size, className }: LogoProps) {
         />
       ) : (
         <Image
-          src={logoImage}
+          src="/logo.png"
           alt="Logo"
           width={foldedSize}
           height={foldedSize}
