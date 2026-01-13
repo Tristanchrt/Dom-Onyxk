@@ -433,7 +433,7 @@ export default function AgentsNavigationPage() {
       <SettingsLayouts.Header
         icon={SvgGlobe}
         title="Agents et Assistants"
-        description="Customize AI behavior and knowledge for you and your team’s use cases."
+        description="Personnalisez le comportement et les connaissances de l'IA pour vos besoins et ceux de votre équipe."
         rightChildren={
           !shouldHideButton && (
             <div data-testid="AgentsPage/new-agent-button">
