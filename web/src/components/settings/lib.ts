@@ -27,6 +27,7 @@ function getDefaultEnterpriseSettings(): EnterpriseSettings {
       process.env.NEXT_PUBLIC_APPLICATION_TITLE || "Dom Engin.",
     use_custom_logo: false,
     use_custom_logotype: false,
+    logo_display_style: null,
     custom_nav_items: [],
     custom_lower_disclaimer_content: null,
     custom_header_content: null,
@@ -34,6 +35,9 @@ function getDefaultEnterpriseSettings(): EnterpriseSettings {
     custom_popup_header: null,
     custom_popup_content: null,
     enable_consent_screen: null,
+    consent_screen_prompt: null,
+    show_first_visit_notice: null,
+    custom_greeting_message: null,
   };
 }
 
